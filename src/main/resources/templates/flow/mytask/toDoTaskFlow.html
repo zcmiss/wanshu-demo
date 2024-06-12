@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>H+ 后台主题UI框架 - 基础表格</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description"
+          content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.7" rel="stylesheet">
+    <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- Data Tables -->
+    <link href="/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+    </style>
+
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Flowable 我的待办</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="/table_basic.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="/table_basic.html#">选项1</a>
+                            </li>
+                            <li><a href="/table_basic.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <!--                        <div class="col-sm-9 m-b-xs">
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                            data-target="#modal-form" data-whatever="@mdo">流程部署
+                                                    </button>
+                                                    &lt;!&ndash;<a class="btn btn-primary single disabled">
+                                                        <i class="fa fa-edit"></i> 修改
+                                                    </a>
+                                                    <a class="btn btn-danger multiple disabled">
+                                                        <i class="fa fa-remove"></i> 删除
+                                                    </a>
+                                                    <a class="btn btn-warning">
+                                                        <i class="fa fa-download"></i> 导出
+                                                    </a>&ndash;&gt;
+                                                </div>-->
+
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="text" name="key" id="formKey" th:value="${pageUtils.key}"
+                                       placeholder="请输入关键词"
+                                       class="input-sm form-control">
+                                <span class="input-group-btn">
+                                    <button type="button" onclick="search()"
+                                            class="btn btn-sm btn-primary"> 搜索</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+
+                                <th></th>
+                                <th>任务名称</th>
+                                <th>流程实例ID</th>
+                                <th>task定义KEY</th>
+                                <th>任务创建时间</th>
+                                <th>执行ID</th>
+                                <th>任务发起人</th>
+                                <th>发起时间</th>
+                                <th>流程图</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="task:${pageUtils.list}">
+                                <td>
+                                    <input type="checkbox" class="i-checks" name="input[]">
+                                </td>
+                                <td>[[${task.taskName}]]</td>
+                                <td>[[${task.processInstanceId}]]</td>
+                                <td>[[${task.processDefinitionKey}]]</td>
+                                <td>[[${task.createTime}]]</td>
+                                <td>[[${task.taskExecutionId}]]</td>
+                                <td>[[${task.startTime}]]</td>
+                                <td>[[${task.assigneeName}]]</td>
+                                <td><a href="javascript:void(0)"
+                                       th:onclick="showImg([[${flow.id}]],[[${task.name}]])"
+                                       data-toggle="modal" data-target="#modal-flow-img">查看流程图</a></td>
+                                <td>
+                                    <a th:href="'/flow/definition/updateState?definitionId='+${flow.id}"
+                                       class="btn btn-primary btn-sm ">
+                                        <i class="fa fa-edit"></i> 发起流程
+                                    </a>
+                                    <!--                <a href="javascript:void(0)"
+                                                       th:onclick="deleteFlow([[${flow.deploymentId}]])"
+                                                       class="btn btn-danger btn-sm ">
+                                                        <i class="fa fa-remove"></i> 删除
+                                                    </a>-->
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div th:include="common/basePage"></div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 部署流程的的窗口 -->
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="exampleModalLabel">流程部署</h4>
+            </div>
+            <form action="/flow/definition/deployFlow" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="flow-name" class="control-label">流程名称:</label>
+                        <input type="text" name="name" class="form-control" id="flow-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="flow-category" class="control-label">流程类别:</label>
+                        <input type="text" name="category" class="form-control" id="flow-category">
+                    </div>
+                    <div class="form-group">
+                        <label for="flow-file" class="control-label">流程类别:</label>
+                        <input class="form-control" name="file" type="file" id="flow-file"></input>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">部署</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- 查看流程图-->
+<div id="modal-flow-img" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="flowImgModalLabel">查看流程图：<span id="flowName"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <img src="" id="flowImg">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭窗口</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 全局js -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.7"></script>
+
+
+<!-- Peity -->
+<script src="/js/plugins/peity/jquery.peity.min.js"></script>
+
+<!-- 自定义js -->
+<script src="/js/content.js?v=1.0.0"></script>
+
+
+<!-- iCheck -->
+<script src="/js/plugins/iCheck/icheck.min.js"></script>
+
+<!-- Peity -->
+<script src="/js/demo/peity-demo.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+
+    function showImg(id, flowName) {
+        $("#flowName").html(flowName);
+        $("#flowImg").attr("src", "/flow/definition/flowImg?processDefinitionId=" + id);
+    }
+
+
+</script>
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<!--统计代码，可删除-->
+
+</body>
+
+</html>

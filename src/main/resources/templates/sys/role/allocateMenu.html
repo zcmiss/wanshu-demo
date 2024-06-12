@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <title>H+ 后台主题UI框架 - 基础表格</title>
+  <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+  <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link href="/css/bootstrap.min.css?v=3.3.7" rel="stylesheet">
+  <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+  <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
+  <link href="/css/animate.css" rel="stylesheet">
+  <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+  <!-- Sweet Alert -->
+  <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+  <style type="text/css">
+  </style>
+
+
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>分配菜单</h5>
+          <div class="ibox-tools">
+            <a class="collapse-link">
+              <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+              <i class="fa fa-wrench"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+              <li><a href="form_basic.html#">选项1</a>
+              </li>
+              <li><a href="form_basic.html#">选项2</a>
+              </li>
+            </ul>
+            <a class="close-link">
+              <i class="fa fa-times"></i>
+            </a>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <form class="form-horizontal" action="/wanshu/role/saveRoleAndMenu" method="post">
+            <p>欢迎登录本站(⊙o⊙)</p>
+              <input type="hidden" name="roleId" th:value="${roleId}">
+
+            <div class="form-group">
+              <label class="col-sm-3 control-label">分配菜单:</label>
+
+              <div class="col-sm-8">
+                <div class="checkbox i-checks" th:each="menu:${menus}">
+                  <label>
+                    <input type="checkbox" name="menuIds" th:checked="${menuIds!=null?#lists.contains(menuIds,menu.id):false}" th:value="${menu.id}">
+                    <i></i> [[${menu.title}]]
+                  </label>
+                    <div style="padding-left: 40px;" class="checkbox i-checks" th:each="sub:${menu.subMenus}">
+                      <label>
+                        <input type="checkbox" name="menuIds" th:checked="${menuIds!=null?#lists.contains(menuIds,sub.id):false}" th:value="${sub.id}">
+                        <i></i>[[${sub.title}]]
+                      </label>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-8">
+                <button class="btn btn-sm btn-white" type="submit">提交</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 全局js -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.7"></script>
+
+
+<!-- Peity -->
+<script src="/js/plugins/peity/jquery.peity.min.js"></script>
+
+<!-- 自定义js -->
+<script src="/js/content.js?v=1.0.0"></script>
+
+
+<!-- iCheck -->
+<script src="/js/plugins/iCheck/icheck.min.js"></script>
+
+<!-- Peity -->
+<script src="/js/demo/peity-demo.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('.i-checks').iCheck({
+      checkboxClass: 'icheckbox_square-green',
+      radioClass: 'iradio_square-green',
+    });
+
+    $("#userNameId").blur(function(){
+       $.get("/wanshu/user/checkUserName?userName="+$("#userNameId").val(),function(data){
+          if(data === 'success'){
+            // 可以使用
+            $("#userNameSpan").html("<span style='color: green'>账号可以使用</span>")
+          }else{
+            // 存在不能使用
+            $("#userNameSpan").html("<span style='color: red'>账号已经存在请更换</span>")
+          }
+       })
+    });
+
+    $("#mobileId").blur(function(){
+      $.get("/wanshu/user/checkMobile?mobile="+$("#mobileId").val(),function(data){
+          if(data === 'success'){
+            // 可以使用
+            $("#mobileSpan").html("<span style='color: green'>手机号可以使用</span>")
+          }else{
+            // 存在不能使用
+            $("#mobileSpan").html("<span style='color: red'>手机号已经存在请更换</span>")
+          }
+      })
+    })
+  });
+</script>
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<!--统计代码，可删除-->
+
+</body>
+
+</html>

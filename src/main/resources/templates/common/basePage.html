@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <footer>
+    <div class="row">
+      <form th:action="${pageUtils.url}" id="pageForm" method="get">
+        <input type="hidden" name="key" id="pageKey" th:value="${pageUtils.key}">
+        <input type="hidden" name="pageSize" id="pageLimit" th:value="${pageUtils.pageSize}">
+        <input type="hidden" name="currPage" id="pageCurPage" th:value="${pageUtils.currPage}">
+      </form>
+      <div class="col-sm-6">
+        <div class="dataTables_info" id="DataTables_Table_0_info" role="alert" aria-live="polite"
+             aria-relevant="all">
+          显示
+          <spna>[[${pageUtils.start}]]</spna>
+          到
+          <spna>[[${pageUtils.end}]]</spna>
+          项，共 [[${pageUtils.totalCount}]] 项
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+          <ul class="pagination">
+            <li th:class="'paginate_button previous ' + ${#strings.equals(pageUtils.getCurrPage(),'1')?'disabled ':''}"
+                aria-controls="DataTables_Table_0" tabindex="0"
+                id="DataTables_Table_0_previous">
+              <a href="javascript:void(0)" onclick="goPre()">上一页</a>
+            </li>
+            <li th:each="pageItem:${pageUtils.pageList}"
+                th:class="'paginate_button '+${#strings.equals(pageUtils.getCurrPage(),pageItem)?'active':''}  "
+                aria-controls="DataTables_Table_0" tabindex="0">
+              <a href="javascript:void(0)" th:onclick="goPage([[${pageItem}]])">[[${pageItem}]]</a>
+            </li>
+            <li th:class="'paginate_button next ' + ${#strings.equals(pageUtils.getCurrPage(),pageUtils.getTotalPage())?'disabled ':''}"
+                aria-controls="DataTables_Table_0" tabindex="0"
+                id="DataTables_Table_0_next">
+              <a href="javascript:void(0)" onclick="goNext()">下一页</a></li>
+          </ul>
+        </div>
+      </div>
+      <script type="text/javascript">
+        function goPre() {
+          // 1.获取查询表单的关键字
+          var key = $("#formKey").val();
+          // 给表单中的key赋值
+          $("#pageKey").val(key)
+          // location.href = '/wanshu/user/list?curPage=' + [[${pageUtils.currPage-1}]];
+          // 2.更新当前页
+          $("#pageCurPage").val([[${pageUtils.currPage-1}]]);
+          $("#pageForm").submit();
+        }
+
+        // 分页方法
+        function goPage(curPage) {
+          // 查询 curPage
+          // location.href = '/wanshu/user/list?curPage=' + curPage;
+          // 1.获取查询表单的关键字
+          var key = $("#formKey").val();
+          // 给表单中的key赋值
+          $("#pageKey").val(key)
+          // location.href = '/wanshu/user/list?curPage=' + [[${pageUtils.currPage-1}]];
+          // 2.更新当前页
+          $("#pageCurPage").val(curPage);
+          $("#pageForm").submit();
+        }
+
+        function goNext() {
+          // location.href = '/wanshu/user/list?curPage=' + [[${pageUtils.currPage+1}]];
+          // 1.获取查询表单的关键字
+          var key = $("#formKey").val();
+          // 给表单中的key赋值
+          $("#pageKey").val(key)
+          // location.href = '/wanshu/user/list?curPage=' + [[${pageUtils.currPage-1}]];
+          // 2.更新当前页
+          $("#pageCurPage").val( [[${pageUtils.currPage+1}]]);
+          $("#pageForm").submit();
+        }
+
+        function search(){
+          // 1.获取查询表单的关键字
+          var key = $("#formKey").val();
+          // 给表单中的key赋值
+          $("#pageKey").val(key)
+          // 2.更新当前页为首页 1
+          $("pageCurPage").val("1");
+          // 提交表单
+          $("#pageForm").submit();
+        }
+      </script>
+    </div>
+  </footer>
+</body>
+</html>

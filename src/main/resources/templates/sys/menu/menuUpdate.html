@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <title>H+ 后台主题UI框架 - 基础表格</title>
+  <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+  <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link href="/css/bootstrap.min.css?v=3.3.7" rel="stylesheet">
+  <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+  <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
+  <link href="/css/animate.css" rel="stylesheet">
+  <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+  <!-- Sweet Alert -->
+  <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+  <style type="text/css">
+  </style>
+
+
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5 th:if="${menu != null}">更新菜单</h5>
+          <h5 th:if="${menu == null}">添加菜单</h5>
+          <div class="ibox-tools">
+            <a class="collapse-link">
+              <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+              <i class="fa fa-wrench"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+              <li><a href="form_basic.html#">选项1</a>
+              </li>
+              <li><a href="form_basic.html#">选项2</a>
+              </li>
+            </ul>
+            <a class="close-link">
+              <i class="fa fa-times"></i>
+            </a>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <form class="form-horizontal" action="/wanshu/menu/saveOrUpdate" method="post">
+            <input type="hidden" name="id" th:value="${menu!=null?menu.id:''}">
+            <div class="form-group">
+              <label class="col-sm-3 control-label">菜单：</label>
+
+              <div class="col-sm-8">
+                <input type="text" name="title" th:value="${menu!=null?menu.title:''}"
+                       placeholder="菜单名称" class="form-control">
+                <span class="help-block m-b-none">请输入菜单名称</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-3 control-label">URL：</label>
+
+              <div class="col-sm-8">
+                <input type="text" name="url" th:value="${menu!=null?menu.url:''}"
+                       placeholder="访问地址" class="form-control">
+                <span class="help-block m-b-none">请输入访问地址</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">菜单位置：</label>
+
+              <div class="col-sm-8">
+                <input type="text" name="indexs" th:value="${menu!=null?menu.indexs:''}"
+                       placeholder="菜单位置" class="form-control">
+                <span class="help-block m-b-none">请输入菜单位置</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-3 control-label">图标：</label>
+
+              <div class="col-sm-8">
+                <input type="text" name="icon" th:value="${menu!=null?menu.icon:''}"
+                       placeholder="菜单位置" class="form-control">
+                <span class="help-block m-b-none">请输入图标</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-3 control-label">序号：</label>
+
+              <div class="col-sm-8">
+                <input type="number" name="orderRank" th:value="${menu!=null?menu.orderRank:''}"
+                       placeholder="录入排序序号" class="form-control">
+                <span class="help-block m-b-none">请输入序号</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">父菜单</label>
+
+              <div class="col-sm-8">
+                <select class="form-control m-b" name="parentId">
+                  <option value="-1">----本身就是一级菜单----</option>
+                  <option th:each="parent:${parents}" th:selected="${menu!=null?menu.parentId==parent.id:false}" th:value="${parent.id}">[[${parent.title}]]</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-8">
+                <button class="btn btn-sm btn-white" type="submit">提交</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 全局js -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.7"></script>
+
+
+<!-- Peity -->
+<script src="/js/plugins/peity/jquery.peity.min.js"></script>
+
+<!-- 自定义js -->
+<script src="/js/content.js?v=1.0.0"></script>
+
+
+<!-- iCheck -->
+<script src="/js/plugins/iCheck/icheck.min.js"></script>
+
+<!-- Peity -->
+<script src="/js/demo/peity-demo.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('.i-checks').iCheck({
+      checkboxClass: 'icheckbox_square-green',
+      radioClass: 'iradio_square-green',
+    });
+
+  });
+</script>
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<!--统计代码，可删除-->
+
+</body>
+
+</html>
