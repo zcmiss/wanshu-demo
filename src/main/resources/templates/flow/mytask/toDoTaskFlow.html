@@ -106,24 +106,19 @@
                                 </td>
                                 <td>[[${task.taskName}]]</td>
                                 <td>[[${task.processInstanceId}]]</td>
-                                <td>[[${task.processDefinitionKey}]]</td>
-                                <td>[[${task.createTime}]]</td>
+                                <td>[[${task.taskDefinitionKey}]]</td>
+                                <td>[[${#dates.format(task.createTime,'yyyy-MM-dd HH:mm:ss')}]]</td>
                                 <td>[[${task.taskExecutionId}]]</td>
-                                <td>[[${task.startTime}]]</td>
+                                <td>[[${#dates.format(task.startTime,'yyyy-MM-dd HH:mm:ss')}]]</td>
                                 <td>[[${task.assigneeName}]]</td>
                                 <td><a href="javascript:void(0)"
-                                       th:onclick="showImg([[${flow.id}]],[[${task.name}]])"
+                                       th:onclick="showImg([[${task.taskId}]],[[${task.taskName}]])"
                                        data-toggle="modal" data-target="#modal-flow-img">查看流程图</a></td>
                                 <td>
-                                    <a th:href="'/flow/definition/updateState?definitionId='+${flow.id}"
+                                    <a th:href="'/flow/definition/updateState?definitionId='+${task.taskId}"
                                        class="btn btn-primary btn-sm ">
                                         <i class="fa fa-edit"></i> 发起流程
                                     </a>
-                                    <!--                <a href="javascript:void(0)"
-                                                       th:onclick="deleteFlow([[${flow.deploymentId}]])"
-                                                       class="btn btn-danger btn-sm ">
-                                                        <i class="fa fa-remove"></i> 删除
-                                                    </a>-->
                                 </td>
                             </tr>
 
@@ -221,9 +216,9 @@
     });
 
 
-    function showImg(id, flowName) {
+    function showImg(taskId, flowName) {
         $("#flowName").html(flowName);
-        $("#flowImg").attr("src", "/flow/definition/flowImg?processDefinitionId=" + id);
+        $("#flowImg").attr("src", "/flow/definition/flowImg?processDefinitionId=" + taskId);
     }
 
 

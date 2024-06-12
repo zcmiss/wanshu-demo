@@ -49,5 +49,6 @@ public class FlowServiceFactory {
     /**
      * 历史服务
      */
+    @Resource
     protected HistoryService historyService;
 }

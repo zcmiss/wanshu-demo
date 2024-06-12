@@ -11,6 +11,8 @@ import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ import java.util.stream.Stream;
 @Service
 public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTaskService {
 
+    private static final Logger log = LoggerFactory.getLogger(FlowTaskServiceImpl.class);
     @Resource
     IUserService userService;
 
@@ -62,6 +65,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         if (tasks.isEmpty()) {
             // TODO: 2024/06/11 无数据处理
         }
+
         List<FlowTaskDto> flowTaskDtos = tasks.stream().map(task -> {
             // 查询流程定义信息
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
@@ -81,9 +85,10 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     .assigneeId((long) user.getId())
                     .assigneeName(task.getAssignee())
                     .createTime(task.getCreateTime())
-                    .processDefinitionId(task.getProcessDefinitionId())
+                    .processInstanceId(task.getProcessInstanceId())
                     .taskName(task.getName())
                     .taskExecutionId(task.getExecutionId())
+                    .processDefinitionKey(processDefinition.getKey())
                     .taskDefinitionKey(task.getTaskDefinitionKey())
                     .processDefinitionId(processDefinition.getId())
                     .processDefinitionName(processDefinition.getName())
@@ -94,6 +99,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     .startTime(historicProcessInstance.getStartTime())
                     .build();
         }).collect(Collectors.toList());
+        log.info("我的待办数据：{}", flowTaskDtos);
         // 设置数据
         pageVo.setList(flowTaskDtos);
 
