@@ -13,4 +13,6 @@ public interface IFlowTaskService {
      * @param pageVo 我的待办
      */
     void  myToDoTaskList(FlowMyToDoTaskVo pageVo);
+
+    byte[] diagram(String processId);
 }

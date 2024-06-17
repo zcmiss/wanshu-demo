@@ -4,6 +4,7 @@ import com.wanshu.flowable.domain.dto.FlowTaskDto;
 import com.wanshu.flowable.domain.vo.FlowMyToDoTaskVo;
 import com.wanshu.flowable.factory.FlowServiceFactory;
 import com.wanshu.flowable.service.IFlowTaskService;
+import com.wanshu.flowable.service.ImageService;
 import com.wanshu.wanshu.entity.User;
 import com.wanshu.wanshu.service.IUserService;
 import com.wanshu.wanshu.utils.WebUtils;
@@ -33,6 +34,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
     private static final Logger log = LoggerFactory.getLogger(FlowTaskServiceImpl.class);
     @Resource
     IUserService userService;
+    @Resource
+    ImageService imageService;
 
     /**
      * 我的待办
@@ -103,6 +106,17 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         // 设置数据
         pageVo.setList(flowTaskDtos);
 
+    }
+
+    @Override
+    public byte[] diagram(String processId) {
+        try {
+            return imageService.generateImageByProcInstId(processId);
+
+        } catch (Exception e) {
+            log.error("生成流程图失败", e);
+        }
+        return new byte[0];
     }
 }
 

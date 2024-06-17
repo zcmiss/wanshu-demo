@@ -112,7 +112,7 @@ public class FlowDefinitionController {
      * 查看流程图
      *
      * @param processDefinitionId 流程部署id
-     * @return {@link String } 流程图
+     * @return {@link String } 流程图 img
      */
     @GetMapping(value = "/flowImg", produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
@@ -124,7 +124,7 @@ public class FlowDefinitionController {
      * 查看流程图
      *
      * @param processDefinitionId 流程部署id
-     * @return {@link String } 流程图
+     * @return {@link String } 流程图xml
      */
     @GetMapping(value = "/flowXml", produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody

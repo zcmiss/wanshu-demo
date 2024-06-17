@@ -4,6 +4,9 @@ import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.springframework.context.annotation.Configuration;
 
+
+import javax.annotation.Resource;
+
 /**
  * 处理流程引擎配置
  * @author zengc
@@ -24,6 +27,8 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
         springProcessEngineConfiguration.setAnnotationFontName("宋体");
         // 设置标签字体
         springProcessEngineConfiguration.setLabelFontName("宋体");
+
+
 
     }
 }
