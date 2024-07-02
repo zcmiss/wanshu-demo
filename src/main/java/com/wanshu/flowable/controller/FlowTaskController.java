@@ -1,14 +1,12 @@
 package com.wanshu.flowable.controller;
 
-import com.wanshu.flowable.domain.vo.FlowMyToDoTaskVo;
+import com.wanshu.flowable.domain.vo.FlowTaskVo;
 import com.wanshu.flowable.service.IFlowTaskService;
+import com.wanshu.wanshu.utils.PageUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -31,7 +29,7 @@ public class FlowTaskController {
      * @return {@link String } 我的待办列表页面
      */
     @GetMapping("/myToDoTask")
-    public String myToDoTask(FlowMyToDoTaskVo pageVo, Model model) {
+    public String myToDoTask(PageUtils pageVo, Model model) {
         iflowTaskService.myToDoTaskList(pageVo);
         model.addAttribute(SYS_PATH_URL, pageVo);
         return "flow/mytask/toDoTaskFlow";
@@ -48,5 +46,34 @@ public class FlowTaskController {
     @ResponseBody
     public byte[] flowImg(@RequestParam("processId") String processId) {
         return iflowTaskService.diagram(processId);
+    }
+
+    /**
+     *  任务审批
+     *
+     * @param taskVo
+     * @return {@link String }
+     */
+    @PostMapping("/completeFlow")
+    public String completeFlow(FlowTaskVo taskVo){
+        boolean flag =  iflowTaskService.complete(taskVo);
+        return "redirect:/flow/mytask/myToDoTask";
+    }
+
+    /**
+     *  我的已办
+     * @return
+     */
+    @GetMapping("finished")
+    public String getFinishedList(PageUtils vo, Model model){
+        iflowTaskService.finishedList(vo);
+        model.addAttribute(SYS_PATH_URL, vo);
+        return "/flow/myfinished/finished";
+    }
+
+    @GetMapping("/approvedFlowImg")
+    @ResponseBody
+    public byte[] approvedFlowImg(@RequestParam("processId") String processId){
+        return iflowTaskService.approvedFlowImg(processId);
     }
 }

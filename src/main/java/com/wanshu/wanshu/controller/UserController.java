@@ -3,31 +3,25 @@ package com.wanshu.wanshu.controller;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.wanshu.wanshu.entity.Role;
 import com.wanshu.wanshu.entity.User;
-import com.wanshu.wanshu.entity.UserRole;
 import com.wanshu.wanshu.exception.group.SaveGroupInterface;
 import com.wanshu.wanshu.exception.group.UpdateGroupInterface;
 import com.wanshu.wanshu.service.IRoleService;
 import com.wanshu.wanshu.service.IUserRoleService;
 import com.wanshu.wanshu.service.IUserService;
-import com.wanshu.wanshu.utils.Constant;
 import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.utils.WebUtils;
 import com.wanshu.wanshu.vo.UserRoleVO;
-import com.wanshu.wanshu.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
-import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -56,9 +50,9 @@ public class UserController {
      * @return
      */
     @GetMapping("/list")
-    public String list( Model model, UserVO vo){
+    public String list( Model model, PageUtils vo){
         // 查询出所有的用户数据
-        UserVO pageUtils = userService.searchPageUser(vo);
+        PageUtils pageUtils = userService.searchPageUser(vo);
         model.addAttribute("pageUtils",pageUtils);
         return "sys/user/user";
     }

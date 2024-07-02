@@ -7,11 +7,6 @@
 <body>
   <footer>
     <div class="row">
-      <form th:action="${pageUtils.url}" id="pageForm" method="get">
-        <input type="hidden" name="key" id="pageKey" th:value="${pageUtils.key}">
-        <input type="hidden" name="pageSize" id="pageLimit" th:value="${pageUtils.pageSize}">
-        <input type="hidden" name="currPage" id="pageCurPage" th:value="${pageUtils.currPage}">
-      </form>
       <div class="col-sm-6">
         <div class="dataTables_info" id="DataTables_Table_0_info" role="alert" aria-live="polite"
              aria-relevant="all">

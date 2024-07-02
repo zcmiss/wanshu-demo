@@ -2,13 +2,12 @@ package com.wanshu.wanshu.controller;
 
 import com.wanshu.wanshu.entity.Menu;
 import com.wanshu.wanshu.service.IMenuService;
+import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.utils.WebUtils;
-import com.wanshu.wanshu.vo.MenuVO;
-import com.wanshu.wanshu.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
 import java.util.Date;
 import java.util.List;
@@ -29,9 +28,9 @@ public class MenuController {
     IMenuService menuService;
 
     @GetMapping("/list")
-    public String list(MenuVO vo, Model model){
+    public String list(PageUtils vo, Model model){
         vo.setPageSize(50);
-        MenuVO resVo = menuService.search(vo);
+        PageUtils resVo = menuService.search(vo);
         model.addAttribute("pageUtils",resVo);
         return "sys/menu/menu";
     }

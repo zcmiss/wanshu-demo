@@ -55,31 +55,21 @@
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                        <!--                        <div class="col-sm-9 m-b-xs">
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                            data-target="#modal-form" data-whatever="@mdo">流程部署
-                                                    </button>
-                                                    &lt;!&ndash;<a class="btn btn-primary single disabled">
-                                                        <i class="fa fa-edit"></i> 修改
-                                                    </a>
-                                                    <a class="btn btn-danger multiple disabled">
-                                                        <i class="fa fa-remove"></i> 删除
-                                                    </a>
-                                                    <a class="btn btn-warning">
-                                                        <i class="fa fa-download"></i> 导出
-                                                    </a>&ndash;&gt;
-                                                </div>-->
-
                         <div class="col-sm-3">
-                            <div class="input-group">
-                                <input type="text" name="key" id="formKey" th:value="${pageUtils.key}"
-                                       placeholder="请输入关键词"
-                                       class="input-sm form-control">
-                                <span class="input-group-btn">
+                            <form action="/flow/mytask/myToDoTask" method="get" id="pageForm">
+                                <div class="input-group">
+                                    <input type="text" name="key" id="formKey" th:value="${pageUtils.key}"
+                                           placeholder="请输入关键词" class="input-sm form-control">
+                                    <input type="hidden" name="pageSize" id="pageLimit"
+                                           th:value="${pageUtils.pageSize}"/>
+                                    <input type="hidden" name="currPage" id="pageCurPage"
+                                           th:value="${pageUtils.currPage}"/>
+                                    <span class="input-group-btn">
                                     <button type="button" onclick="search()"
                                             class="btn btn-sm btn-primary"> 搜索</button>
                                 </span>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -109,15 +99,16 @@
                                 <td>[[${task.taskDefinitionKey}]]</td>
                                 <td>[[${#dates.format(task.createTime,'yyyy-MM-dd HH:mm:ss')}]]</td>
                                 <td>[[${task.taskExecutionId}]]</td>
+                                <td>[[${task.startUserName}]]</td>
                                 <td>[[${#dates.format(task.startTime,'yyyy-MM-dd HH:mm:ss')}]]</td>
-                                <td>[[${task.assigneeName}]]</td>
                                 <td><a href="javascript:void(0)"
                                        th:onclick="showImg([[${task.processInstanceId}]],[[${task.taskName}]])"
                                        data-toggle="modal" data-target="#modal-flow-img">查看流程图</a></td>
                                 <td>
-                                    <a th:href="'/flow/definition/updateState?definitionId='+${task.taskId}"
+                                    <a href="javascript:void(0)" th:onclick="showApproverFlow([[${task}]])"
+                                       data-toggle="modal" data-target="#modal-approval-flow"
                                        class="btn btn-primary btn-sm ">
-                                        <i class="fa fa-edit"></i> 发起流程
+                                        <i class="fa fa-edit"></i> 审批
                                     </a>
                                 </td>
                             </tr>
@@ -135,59 +126,58 @@
     </div>
 </div>
 
-<!-- 部署流程的的窗口 -->
-<div id="modal-form" class="modal fade" aria-hidden="true">
+<!-- 审批流程 -->
+<div id="modal-approval-flow" class="modal fade" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel">流程部署</h4>
+                <h4 class="modal-title" id="exampleModalLabel">审批流程</h4>
             </div>
-            <form action="/flow/definition/deployFlow" method="post" enctype="multipart/form-data">
+            <form action="/flow/mytask/completeFlow" method="post" id="approvedForm">
+                <input type="hidden" name="taskId" id="taskId">
+                <input type="hidden" name="approvd" id="approvdId" value="true">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="flow-name" class="control-label">流程名称:</label>
-                        <input type="text" name="name" class="form-control" id="flow-name">
+                        <label for="flow-holidayDays" class="control-label">请假天数:</label>
+                        <input type="number" readonly name="holidayDays" class="form-control" id="flow-holidayDays">
                     </div>
                     <div class="form-group">
-                        <label for="flow-category" class="control-label">流程类别:</label>
-                        <input type="text" name="category" class="form-control" id="flow-category">
+                        <label for="flow-reason" class="control-label">请假原因：</label>
+                        <input type="text" readonly name="reason" class="form-control" id="flow-reason">
                     </div>
                     <div class="form-group">
-                        <label for="flow-file" class="control-label">流程类别:</label>
-                        <input class="form-control" name="file" type="file" id="flow-file"></input>
+                        <label for="flow-comment" class="control-label">审核意见：</label>
+                        <input type="text"  name="comment" class="form-control" id="flow-comment">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="submit" class="btn btn-primary">部署</button>
+                    <button type="button" class="btn btn-success" onclick="submitForm(true)"><i class="fa fa-check"></i>&nbsp;审核通过</button>
+                    <button type="button" class="btn btn-warning" onclick="submitForm(false)"><i class="fa fa-times"></i>&nbsp;拒绝申请</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 <!-- 查看流程图-->
-<!-- 模态框结构 -->
-<div id="modal-flow-img" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="flowImgModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div id="modal-flow-img" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="width: auto">
         <div class="modal-content">
-            <!-- 模态框头部 -->
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="flowImgModalLabel">查看流程图：<span id="flowName"></span></h4>
             </div>
-            <!-- 模态框主体 -->
             <div class="modal-body">
                 <div class="form-group">
-                    <img src="" id="flowImg" class="img-fluid">
+                    <img src="" id="flowImg">
                 </div>
-            </div>
-            <!-- 模态框底部 -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭窗口</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭窗口</button>
+                </div>
             </div>
         </div>
     </div>
@@ -222,11 +212,23 @@
     });
 
 
+    function showApproverFlow(task){
+        $("#flow-holidayDays").val(task.variables.holidayDays.textValue);
+        $("#flow-reason").val(task.variables.reason.textValue);
+        $("#taskId").val(task.taskId);
+    }
+
     function showImg(processInstanceId, flowName) {
         $("#flowName").html(flowName);
         $("#flowImg").attr("src", "/flow/mytask/flowImg?processId=" + processInstanceId);
     }
 
+    function submitForm(approvd){
+        // 更新审核状态
+        $("#approvdId").val(approvd);
+        // 表单提交
+        $("#approvedForm").submit();
+    }
 
 
 

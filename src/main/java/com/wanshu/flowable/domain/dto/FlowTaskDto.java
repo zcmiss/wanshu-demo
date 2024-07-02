@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.flowable.variable.api.persistence.entity.VariableInstance;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 任务dto
@@ -64,10 +66,6 @@ public class FlowTaskDto {
      */
     private String category;
     /**
-     * 流程变量信息
-     */
-    private Object variables;
-    /**
      * 局部变量信息
      */
     private Object taskLocalVariables;
@@ -111,6 +109,10 @@ public class FlowTaskDto {
      * 候选执行人
      */
     private String candidateUsers;
+    /**
+     * 流程变量信息
+     */
+    private Map<String, VariableInstance> variables;
     /**
      * 任务发起时间
      */

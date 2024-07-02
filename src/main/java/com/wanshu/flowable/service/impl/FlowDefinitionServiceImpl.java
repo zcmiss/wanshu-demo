@@ -1,9 +1,9 @@
 package com.wanshu.flowable.service.impl;
 
 import com.wanshu.flowable.domain.dto.FlowDeployProcDto;
-import com.wanshu.flowable.domain.vo.FlowDeployProVo;
 import com.wanshu.flowable.factory.FlowServiceFactory;
 import com.wanshu.flowable.service.IFlowDefinitionService;
+import com.wanshu.wanshu.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.flowable.engine.repository.Deployment;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,10 +36,10 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
      * 分页查询
      *
      * @param pageVo 分页参数
-     * @return {@link FlowDeployProVo } 分页结果
+     * @return {@link PageUtils } 分页结果
      */
     @Override
-    public FlowDeployProVo listFlowDefinition(FlowDeployProVo pageVo) {
+    public PageUtils listFlowDefinition(PageUtils pageVo) {
         // 1： 查询所有的部署流程
         DeploymentQuery deploymentQuery = repositoryService.createDeploymentQuery();
 
@@ -64,10 +65,12 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
                     .deploymentId(processDefinition.getDeploymentId())
                     .flowKey(processDefinition.getKey())
                     .deploymentDate(deployment.getDeploymentTime())
-                    .version(processDefinition.getVersion())
-                    .suspensionState(processDefinition.isSuspended() ? 2 : 1)
+                    .version(Integer.valueOf(processDefinition.getVersion()))
+                    .suspensionState(Integer.valueOf(processDefinition.isSuspended() ? 2 : 1))
                     .build();
-        }).collect(Collectors.toList());
+        })
+                .sorted((o1, o2) -> o2.getDeploymentDate().compareTo(o1.getDeploymentDate()))
+                .collect(Collectors.toList());
         pageVo.setList(flowDeployProcDtos);
         int count = (int) deploymentQuery.count();
         pageVo.setTotalCount(count);
@@ -79,10 +82,10 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
      * 分页查询
      *
      * @param pageVo 分页参数
-     * @return {@link FlowDeployProVo } 分页结果
+     * @return {@link PageUtils } 分页结果
      */
     @Override
-    public FlowDeployProVo latestListFlowDefinition(FlowDeployProVo pageVo) {
+    public PageUtils latestListFlowDefinition(PageUtils pageVo) {
         // 1： 查询所有的部署流程
         ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
 
@@ -111,10 +114,12 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
                             .deploymentId(processDefinition.getDeploymentId())
                             .flowKey(processDefinition.getKey())
                             .deploymentDate(deployment.getDeploymentTime())
-                            .version(processDefinition.getVersion())
-                            .suspensionState(processDefinition.isSuspended() ? 2 : 1)
+                            .version(Integer.valueOf(processDefinition.getVersion()))
+                            .suspensionState(Integer.valueOf(processDefinition.isSuspended() ? 2 : 1))
                             .build();
-                }).collect(Collectors.toList());
+                })
+                        .sorted(Comparator.comparing(FlowDeployProcDto::getVersion))
+                        .collect(Collectors.toList());
         pageVo.setList(flowDeployProcDtos);
         int count = (int) processDefinitionQuery.count();
         pageVo.setTotalCount(count);

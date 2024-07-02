@@ -1,10 +1,10 @@
 package com.wanshu.wanshu.service;
 
-import com.wanshu.wanshu.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wanshu.wanshu.entity.Role;
+import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.vo.MenuShowVO;
 import com.wanshu.wanshu.vo.RoleMenuVO;
-import com.wanshu.wanshu.vo.RoleVO;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface IRoleService extends IService<Role> {
 
-    RoleVO search(RoleVO vo);
+    PageUtils search(PageUtils vo);
 
     Boolean canIDeleteById(Integer id);
 

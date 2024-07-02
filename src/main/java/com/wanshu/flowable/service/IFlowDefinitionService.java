@@ -1,11 +1,8 @@
 package com.wanshu.flowable.service;
 
-import com.wanshu.flowable.domain.dto.FlowDeployProcDto;
-import com.wanshu.flowable.domain.vo.FlowDeployProVo;
-import liquibase.pro.packaged.S;
+import com.wanshu.wanshu.utils.PageUtils;
 
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * 流程定义的服务接口
@@ -18,17 +15,17 @@ public interface IFlowDefinitionService {
      * 分页查询
      *
      * @param pageVo 分页参数
-     * @return {@link FlowDeployProVo } 分页结果
+     * @return {@link PageUtils } 分页结果
      */
-    FlowDeployProVo listFlowDefinition(FlowDeployProVo pageVo);
+    PageUtils listFlowDefinition(PageUtils pageVo);
 
     /**
      * 分页查询
      *
      * @param pageVo 分页参数
-     * @return {@link FlowDeployProVo } 分页结果
+     * @return {@link PageUtils } 分页结果
      */
-    FlowDeployProVo latestListFlowDefinition(FlowDeployProVo pageVo);
+    PageUtils latestListFlowDefinition(PageUtils pageVo);
 
     /**
      * 更新流程状态

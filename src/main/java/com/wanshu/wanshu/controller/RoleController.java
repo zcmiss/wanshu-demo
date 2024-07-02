@@ -1,18 +1,17 @@
 package com.wanshu.wanshu.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.wanshu.wanshu.entity.Role;
 import com.wanshu.wanshu.service.IRoleService;
+import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.vo.MenuShowVO;
 import com.wanshu.wanshu.vo.RoleMenuVO;
-import com.wanshu.wanshu.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
 import java.util.Date;
 import java.util.List;
@@ -33,8 +32,8 @@ public class RoleController {
     IRoleService roleService;
 
     @GetMapping("/list")
-    public String list(RoleVO vo, Model model){
-        RoleVO resVo = roleService.search(vo);
+    public String list(PageUtils vo, Model model){
+        PageUtils resVo = roleService.search(vo);
         model.addAttribute("pageUtils",resVo);
         return "sys/role/role";
     }

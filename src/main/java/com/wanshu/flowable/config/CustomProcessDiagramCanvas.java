@@ -1247,7 +1247,7 @@ public class CustomProcessDiagramCanvas {
     }
 
     /**
-     * This method returns intersection point of shape border and line.
+     * 该方法返回形状边框和直线的交点。
      *
      * @param shape
      * @param line
@@ -1265,10 +1265,10 @@ public class CustomProcessDiagramCanvas {
     }
 
     /**
-     * This method calculates ellipse intersection with line
+     * 该方法计算椭圆与直线的交点
      *
-     * @param shape Bounds of this shape used to calculate parameters of inscribed into this bounds ellipse.
-     * @param line
+     * @param shape 该形状的边界用于计算切入该边界椭圆的参数。
+     * @param line 该线用于计算与椭圆的交点。
      * @return Intersection point
      */
     private static Point getEllipseIntersection(Shape shape, Line2D.Double line) {
@@ -1281,7 +1281,7 @@ public class CustomProcessDiagramCanvas {
     }
 
     /**
-     * This method calculates shape intersection with line.
+     * 该方法计算形状与直线的交点。
      *
      * @param shape
      * @param line
@@ -1318,7 +1318,7 @@ public class CustomProcessDiagramCanvas {
     }
 
     /**
-     * This method calculates intersections of two lines.
+     * 该方法计算两条线的交点。
      *
      * @param a Line 1
      * @param b Line 2

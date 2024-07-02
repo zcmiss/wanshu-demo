@@ -70,13 +70,20 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <div class="input-group">
-                                <input type="text" name="key" id="formKey" th:value="${pageUtils.key}" placeholder="请输入关键词"
-                                       class="input-sm form-control">
-                                <span class="input-group-btn">
-                                    <button type="button" onclick="search()" class="btn btn-sm btn-primary"> 搜索</button>
+                           <form action="/wanshu/user/list" method="get" id="pageForm">
+                               <div class="input-group">
+                                   <input type="text" name="key" id="formKey" th:value="${pageUtils.key}"
+                                          placeholder="请输入关键词" class="input-sm form-control">
+                                   <input type="hidden" name="pageSize" id="pageLimit"
+                                          th:value="${pageUtils.pageSize}"/>
+                                   <input type="hidden" name="currPage" id="pageCurPage"
+                                          th:value="${pageUtils.currPage}"/>
+                                   <span class="input-group-btn">
+                                    <button type="button" onclick="search()"
+                                            class="btn btn-sm btn-primary"> 搜索</button>
                                 </span>
-                            </div>
+                               </div>
+                           </form>
 
                         </div>
                     </div>

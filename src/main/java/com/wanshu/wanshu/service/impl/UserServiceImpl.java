@@ -9,9 +9,9 @@ import com.wanshu.wanshu.entity.UserRole;
 import com.wanshu.wanshu.mapper.UserMapper;
 import com.wanshu.wanshu.service.IUserRoleService;
 import com.wanshu.wanshu.service.IUserService;
+import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.utils.Query;
 import com.wanshu.wanshu.vo.UserRoleVO;
-import com.wanshu.wanshu.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public UserVO searchPageUser(UserVO vo) {
+    public PageUtils searchPageUser(PageUtils vo) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StringUtils.isNotBlank(vo.getKey()), "user_name", vo.getKey())
                 .or().like(StringUtils.isNotBlank(vo.getKey()), "nick_name", vo.getKey())

@@ -39,5 +39,4 @@ public class FlowableInstanceController {
         return "redirect:/flow/definition/latestList";
     }
 
-
 }

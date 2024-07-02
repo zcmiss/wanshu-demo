@@ -1,6 +1,7 @@
 package com.wanshu.flowable.service;
 
-import com.wanshu.flowable.domain.vo.FlowMyToDoTaskVo;
+import com.wanshu.flowable.domain.vo.FlowTaskVo;
+import com.wanshu.wanshu.utils.PageUtils;
 
 /**
  * @author zengc
@@ -12,7 +13,18 @@ public interface IFlowTaskService {
      *
      * @param pageVo 我的待办
      */
-    void  myToDoTaskList(FlowMyToDoTaskVo pageVo);
+    void  myToDoTaskList(PageUtils pageVo);
 
     byte[] diagram(String processId);
+
+    /**
+     * 审批任务
+     * @param taskVo 任务
+     * @return {@link Boolean } true：审核通过 false：审核拒绝
+     */
+    boolean complete(FlowTaskVo taskVo);
+
+    void finishedList(PageUtils vo);
+
+    byte[] approvedFlowImg(String processId);
 }

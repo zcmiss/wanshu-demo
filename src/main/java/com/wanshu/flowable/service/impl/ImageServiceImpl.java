@@ -128,7 +128,7 @@ public class ImageServiceImpl implements ImageService {
                     .getActivityId(), true);
 
             if (flowElement instanceof FlowNode) {
-                 currentFlowNode = (FlowNode) flowElement;
+                currentFlowNode = (FlowNode) flowElement;
                 // 当前节点的所有流出线
                 outgoingFlowList = currentFlowNode.getOutgoingFlows();
             } else {
@@ -300,16 +300,25 @@ public class ImageServiceImpl implements ImageService {
 
             // 使用默认配置获得流程图表生成器，并生成追踪图片字符流
             imageStream = ((CustomProcessDiagramGenerator) processDiagramGenerator)
-                    .generateDiagramCustom(bpmnModel, "png",
-                            highLightedActivitiIdList, runningActivitiIdList, highLightedFlowIds,
-                            "宋体", "微软雅黑", "黑体",
-                            null, 2.0);
+                    .generateDiagramCustom(
+                            bpmnModel,
+                            "png",
+                            highLightedActivitiIdList,
+                            runningActivitiIdList,
+                            highLightedFlowIds,
+                            "宋体",
+                            "微软雅黑",
+                            "黑体",
+
+                            null,
+                            2.0
+                    );
             // 将InputStream数据流转换为byte[]
             byte[] buffer = new byte[imageStream.available()];
             int read = imageStream.read(buffer);
             return buffer;
         } catch (Exception e) {
-            logger.error("通过流程实例ID[{}]获取流程图时出现异常！",procInstId, e);
+            logger.error("通过流程实例ID[{}]获取流程图时出现异常！", procInstId, e);
             throw new Exception("通过流程实例ID" + procInstId + "获取流程图时出现异常！", e);
         } finally {
             if (imageStream != null) {

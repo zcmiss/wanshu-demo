@@ -1,9 +1,9 @@
 package com.wanshu.wanshu.service;
 
-import com.wanshu.wanshu.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wanshu.wanshu.entity.Menu;
+import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.vo.MenuShowVO;
-import com.wanshu.wanshu.vo.MenuVO;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface IMenuService extends IService<Menu> {
 
-    MenuVO search(MenuVO vo);
+    PageUtils search(PageUtils vo);
 
     List<Menu> getAll1LevelMenus();
 

@@ -59,7 +59,7 @@ public class FlowDeployProcDto {
     /**
      * 流程定义版本
      */
-    private int version;
+    private Integer version;
     /**
      * 表单名称
      */

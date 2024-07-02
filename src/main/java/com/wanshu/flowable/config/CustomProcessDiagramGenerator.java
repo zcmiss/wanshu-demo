@@ -1,11 +1,12 @@
 package com.wanshu.flowable.config;
 
 
-import org.flowable.bpmn.model.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.Process;
+import org.flowable.bpmn.model.*;
 import org.flowable.image.ProcessDiagramGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
@@ -16,21 +17,31 @@ import java.util.*;
  * @author zengc
  * @date 2024/06/17
  */
+@Setter
+@Getter
+@Slf4j
 public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
-    protected static final Logger logger = LoggerFactory.getLogger(CustomProcessDiagramGenerator.class);
+
 
 
     protected Map<Class<? extends BaseElement>, ActivityDrawInstruction> activityDrawInstructions = new HashMap<>();
     protected Map<Class<? extends BaseElement>, ArtifactDrawInstruction> artifactDrawInstructions = new HashMap<>();
 
+    /**
+     * 有关如何绘制特定结构的说明是
+     */
     public CustomProcessDiagramGenerator() {
         this(1.0);
     }
 
-    // The instructions on how to draw a certain construct is
-    // created statically and stored in a map for performance.
+
+    /**
+     * 有关如何绘制特定结构的说明是
+     * 静态创建并存储在映射中以提高性能。
+     * @param scaleFactor 比例
+     */
     public CustomProcessDiagramGenerator(final double scaleFactor) {
-        // start event
+        // 开始事件
         activityDrawInstructions.put(StartEvent.class, new ActivityDrawInstruction() {
 
             @Override
@@ -545,10 +556,10 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
             if (highLightedActivities.contains(flowNode.getId())) {
                 //如果节点为当前正在处理中的节点，则红色高亮显示
                 if (runningActivitiIdList.contains(flowNode.getId())) {
-                    logger.debug("[绘制]-当前正在处理中的节点-红色高亮显示节点[{}-{}]", flowNode.getId(), flowNode.getName());
+                    log.debug("[绘制]-当前正在处理中的节点-红色高亮显示节点[{}-{}]", flowNode.getId(), flowNode.getName());
                     drawRunningActivitiHighLight(processDiagramCanvas, bpmnModel.getGraphicInfo(flowNode.getId()));
                 } else {
-                    logger.debug("[绘制]-高亮显示节点[{}-{}]", flowNode.getId(), flowNode.getName());
+                    log.debug("[绘制]-高亮显示节点[{}-{}]", flowNode.getId(), flowNode.getName());
                     drawHighLight(processDiagramCanvas, bpmnModel.getGraphicInfo(flowNode.getId()));
                 }
             }
@@ -591,14 +602,13 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 
                 }
 
-                processDiagramCanvas.drawSequenceflow(xPoints, yPoints, drawConditionalIndicator, isDefault,
-                        highLighted, scaleFactor);
+                processDiagramCanvas.drawSequenceflow(xPoints, yPoints, drawConditionalIndicator, isDefault, highLighted, scaleFactor);
                 //绘制流程线名称
                 GraphicInfo labelGraphicInfo = bpmnModel.getLabelGraphicInfo(sequenceFlow.getId());
-//				if (labelGraphicInfo != null) {
-                GraphicInfo lineCenter = getLineCenter(graphicInfoList);
-                processDiagramCanvas.drawLabel(sequenceFlow.getName(), lineCenter, true);
-//				}
+                if (labelGraphicInfo != null) {
+                    GraphicInfo lineCenter = getLineCenter(graphicInfoList);
+                    processDiagramCanvas.drawLabel(sequenceFlow.getName(), lineCenter, true);
+                }
             }
         }
 
@@ -904,24 +914,6 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
         return flowNodes;
     }
 
-    public Map<Class<? extends BaseElement>, ActivityDrawInstruction> getActivityDrawInstructions() {
-        return activityDrawInstructions;
-    }
-
-    public void setActivityDrawInstructions(
-            Map<Class<? extends BaseElement>, ActivityDrawInstruction> activityDrawInstructions) {
-        this.activityDrawInstructions = activityDrawInstructions;
-    }
-
-    public Map<Class<? extends BaseElement>, ArtifactDrawInstruction> getArtifactDrawInstructions() {
-        return artifactDrawInstructions;
-    }
-
-    public void setArtifactDrawInstructions(
-            Map<Class<? extends BaseElement>, ArtifactDrawInstruction> artifactDrawInstructions) {
-        this.artifactDrawInstructions = artifactDrawInstructions;
-    }
-
     protected interface ActivityDrawInstruction {
 
         void draw(CustomProcessDiagramCanvas processDiagramCanvas, BpmnModel bpmnModel, FlowNode flowNode);
@@ -998,8 +990,14 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 
     @Override
     public BufferedImage generatePngImage(BpmnModel bpmnModel, double scaleFactor) {
-        return generateImage(bpmnModel, "png", Collections.<String>emptyList(), Collections.<String>emptyList(),
-                scaleFactor, true);
+        return generateImage(
+                bpmnModel,
+                "png",
+                Collections.<String>emptyList(),
+                Collections.<String>emptyList(),
+                scaleFactor,
+                true
+        );
     }
 
 }

@@ -3,7 +3,7 @@ package com.wanshu.wanshu.vo;
 import lombok.Data;
 
 @Data
-public class PageVO {
+public class  PageVO {
 
     private String key;
 

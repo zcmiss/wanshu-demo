@@ -1,7 +1,7 @@
 package com.wanshu.flowable.controller;
 
-import com.wanshu.flowable.domain.vo.FlowDeployProVo;
 import com.wanshu.flowable.service.IFlowDefinitionService;
+import com.wanshu.wanshu.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -43,7 +43,7 @@ public class FlowDefinitionController {
      * @return {@link String } 流程定义列表页面
      */
     @GetMapping("/list")
-    public String listFlowDefinition(FlowDeployProVo pageVo, org.springframework.ui.Model mode) {
+    public String listFlowDefinition(PageUtils pageVo, org.springframework.ui.Model mode) {
         pageVo = flowDefinitionService.listFlowDefinition(pageVo);
         mode.addAttribute(SYS_PATH_URL, pageVo);
         return "flow/definition/flowDefinition";
@@ -57,7 +57,7 @@ public class FlowDefinitionController {
      * @return {@link String } 流程定义列表页面
      */
     @GetMapping("/latestList")
-    public String latestListFlowDefinition(FlowDeployProVo pageVo, org.springframework.ui.Model mode) {
+    public String latestListFlowDefinition(PageUtils pageVo, org.springframework.ui.Model mode) {
         pageVo = flowDefinitionService.latestListFlowDefinition(pageVo);
         mode.addAttribute(SYS_PATH_URL, pageVo);
         return "flow/process/startFlow";

@@ -3,17 +3,15 @@ package com.wanshu.wanshu.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wanshu.wanshu.entity.Menu;
-import com.wanshu.wanshu.entity.Role;
 import com.wanshu.wanshu.entity.RoleMenu;
 import com.wanshu.wanshu.mapper.MenuMapper;
 import com.wanshu.wanshu.service.IMenuService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wanshu.wanshu.service.IRoleMenuService;
+import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.utils.Query;
 import com.wanshu.wanshu.vo.MenuShowVO;
-import com.wanshu.wanshu.vo.MenuVO;
-import com.wanshu.wanshu.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +35,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     IRoleMenuService roleMenuService;
 
     @Override
-    public MenuVO search(MenuVO vo) {
+    public PageUtils search(PageUtils vo) {
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StringUtils.isNotBlank(vo.getKey()),"title",vo.getKey())
                 .orderByAsc("order_rank");

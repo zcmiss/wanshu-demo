@@ -3,6 +3,7 @@ package com.wanshu.wanshu.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wanshu.wanshu.entity.Menu;
 import com.wanshu.wanshu.entity.Role;
 import com.wanshu.wanshu.entity.RoleMenu;
@@ -11,12 +12,11 @@ import com.wanshu.wanshu.mapper.RoleMapper;
 import com.wanshu.wanshu.service.IMenuService;
 import com.wanshu.wanshu.service.IRoleMenuService;
 import com.wanshu.wanshu.service.IRoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wanshu.wanshu.service.IUserRoleService;
+import com.wanshu.wanshu.utils.PageUtils;
 import com.wanshu.wanshu.utils.Query;
 import com.wanshu.wanshu.vo.MenuShowVO;
 import com.wanshu.wanshu.vo.RoleMenuVO;
-import com.wanshu.wanshu.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     IMenuService menuService;
 
     @Override
-    public RoleVO search(RoleVO vo) {
+    public PageUtils search(PageUtils vo) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StringUtils.isNotBlank(vo.getKey()),"role_name",vo.getKey())
                 .or().like(StringUtils.isNotBlank(vo.getKey()),"role_desc",vo.getKey())
