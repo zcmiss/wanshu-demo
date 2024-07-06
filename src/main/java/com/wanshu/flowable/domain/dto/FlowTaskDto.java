@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.flowable.variable.api.persistence.entity.VariableInstance;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -114,6 +115,14 @@ public class FlowTaskDto {
      */
     private Map<String, VariableInstance> variables;
     /**
+     *  流程变量信息
+     */
+    private Map<String, Object> alreadyDoneVariables;
+    /**
+     * 关联 任务的流转记录
+     */
+    private List<HistoricTaskInstanceDto> transferRecords;
+    /**
      * 任务发起时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -123,11 +132,7 @@ public class FlowTaskDto {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
-    /**
-     * 任务完成时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date finishTime;
+
 
 
 }

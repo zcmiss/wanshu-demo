@@ -3,6 +3,7 @@ package com.wanshu.flowable.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.wanshu.flowable.config.CustomProcessDiagramGenerator;
 import com.wanshu.flowable.domain.dto.FlowTaskDto;
+import com.wanshu.flowable.domain.dto.HistoricTaskInstanceDto;
 import com.wanshu.flowable.domain.vo.FlowTaskVo;
 import com.wanshu.flowable.factory.FlowServiceFactory;
 import com.wanshu.flowable.service.IFlowTaskService;
@@ -19,10 +20,12 @@ import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.engine.task.Comment;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskQuery;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.task.api.history.HistoricTaskInstanceQuery;
+import org.flowable.variable.api.history.HistoricVariableInstance;
 import org.flowable.variable.api.persistence.entity.VariableInstance;
 import org.springframework.stereotype.Service;
 
@@ -177,46 +180,90 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         List<HistoricTaskInstance> historicTaskInstances = historicTaskInstanceQuery
                 .listPage((currPage - 1) * pageSize, pageSize);
         int count = (int) historicTaskInstanceQuery.count();
-        vo.setTotalCount(count);
-        vo.setTotalPage((count + 1) / pageSize + 1);
+        //vo.setTotalCount(count);
+        vo.setTotalCount((count + 1) / pageSize + 1);
 
-        List<FlowTaskDto> flowTaskDtos = historicTaskInstances.stream().map(task -> {
+        List<FlowTaskDto> flowTaskDtos = historicTaskInstances.stream().map(historicTaskInstance -> {
             // 查询流程定义信息
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                    .processDefinitionId(task.getProcessDefinitionId())
+                    .processDefinitionId(historicTaskInstance.getProcessDefinitionId())
                     .singleResult();
             // 查询流程发起人的信息
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                    .processInstanceId(task.getProcessInstanceId())
+                    .processInstanceId(historicTaskInstance.getProcessInstanceId())
                     .singleResult();
+            // 获取流程变量信息
+            List<HistoricVariableInstance> historicVariableInstances = historyService
+                    .createHistoricVariableInstanceQuery()
+                    .processInstanceId(historicTaskInstance.getProcessInstanceId())
+                    .list();
+            Map<String, Object> processVariables = historicVariableInstances.stream()
+                    .collect(Collectors
+                                    .toMap(HistoricVariableInstance::getVariableName,
+                                            HistoricVariableInstance::getValue));
             // 查询任务的发起人
             String startUserId = historicProcessInstance.getStartUserId();
             // 查询用户信息
             User user = userService.queryByUserName(startUserId);
             // 耗时
-            long timeConsuming = task.getDurationInMillis() / 1000;
+            long timeConsuming = historicTaskInstance.getDurationInMillis() / 1000;
             String timeConsumingStr = getTimeConsumingStr(timeConsuming);
+            // 查询当前任务的流转信息
+            List<HistoricTaskInstance> historicTaskInstanceDetails = historyService.createHistoricTaskInstanceQuery()
+                    .processInstanceId(historicTaskInstance.getProcessInstanceId())
+                    .orderByHistoricTaskInstanceStartTime()
+                    .asc()
+                    .list();
 
+            List<HistoricTaskInstanceDto> historicTaskInstanceDtos = historicTaskInstanceDetails.stream().map(historicTaskInstanceDetail -> {
+                Long durationInMillis = historicTaskInstanceDetail.getDurationInMillis();
+                String consumingStr = Objects.nonNull(durationInMillis) ? getTimeConsumingStr(durationInMillis/1000) : null;
+
+                String assignee = historicTaskInstanceDetail.getAssignee();
+                // 任务审批人
+                User taskUser = userService.queryByUserName(assignee);
+                // 审批意见
+                List<String> comments = taskService.getTaskComments(historicTaskInstanceDetail.getId())
+                        .stream().map(Comment::getFullMessage)
+                        .collect(Collectors.toList());
+                String comment = comments.isEmpty() ? null : comments.get(0);
+
+
+                return HistoricTaskInstanceDto.builder()
+                        .taskId(historicTaskInstanceDetail.getId())
+                        .taskName(historicTaskInstance.getName())
+                        .finishTime(historicTaskInstanceDetail.getEndTime())
+                        .duration(consumingStr)
+                        .assigneeName(taskUser.getNickName())
+                        .comment(comment)
+                        .build();
+            })
+                    // 根据  finishTime 降序排序
+                    .sorted(Comparator.comparing(HistoricTaskInstanceDto::getFinishTime))
+                    .collect(Collectors.toList());
+            log.info("已办 任务历史数据：{}", historicTaskInstanceDtos);
 
             // 封装数据
             return FlowTaskDto.builder()
-                    .taskId(task.getId())
+                    .taskId(historicTaskInstance.getId())
                     .assigneeId((long) user.getId())
-                    .assigneeName(task.getAssignee())
-                    .createTime(task.getCreateTime())
-                    .processInstanceId(task.getProcessInstanceId())
-                    .taskName(task.getName())
-                    .taskExecutionId(task.getExecutionId())
+                    .assigneeName(historicTaskInstance.getAssignee())
+                    .createTime(historicTaskInstance.getCreateTime())
+                    .processInstanceId(historicTaskInstance.getProcessInstanceId())
+                    .taskName(historicTaskInstance.getName())
+                    .taskExecutionId(historicTaskInstance.getExecutionId())
                     .processDefinitionKey(processDefinition.getKey())
-                    .taskDefinitionKey(task.getTaskDefinitionKey())
+                    .taskDefinitionKey(historicTaskInstance.getTaskDefinitionKey())
                     .processDefinitionId(processDefinition.getId())
                     .processDefinitionName(processDefinition.getName())
                     .processDefinitionVersion(processDefinition.getVersion())
+                    .alreadyDoneVariables(processVariables)
                     .duration(timeConsumingStr)
                     .deploymentId(processDefinition.getDeploymentId())
                     .startUserId(startUserId)
                     .startUserName(user.getNickName())
                     .startTime(historicProcessInstance.getStartTime())
+                    .transferRecords(historicTaskInstanceDtos)
                     .build();
         }).collect(Collectors.toList());
         log.info("我的已办数据：{}", flowTaskDtos);
@@ -282,7 +329,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                         .singleResult();
                 processDefinitionId = historicProcessInstance.getProcessDefinitionId();
 
-            }else {
+            } else {
                 processDefinitionId = processInstance.getProcessDefinitionId();
             }
             String userName = WebUtils.loginUserName();
@@ -304,7 +351,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
             ProcessEngineConfiguration processEngineConfiguration = processEngine.getProcessEngineConfiguration();
             CustomProcessDiagramGenerator customProcessDiagramGenerator = new CustomProcessDiagramGenerator();
-            ArrayList<String > arrayList = new ArrayList<>();
+            ArrayList<String> arrayList = new ArrayList<>();
             InputStream inputStream = customProcessDiagramGenerator.generateDiagram(
                     bpmnModel,
                     "png",
@@ -318,8 +365,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             );
             return IOUtils.toByteArray(inputStream);
         } catch (Exception e) {
-                log.error("查询已办流程图 发生异常：", e);
-            }
-            return new byte[0];
+            log.error("查询已办流程图 发生异常：", e);
         }
+        return new byte[0];
     }
+}

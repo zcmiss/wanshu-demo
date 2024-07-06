@@ -111,10 +111,10 @@
                                        data-toggle="modal" data-target="#modal-flow-img"> 我的审批</a>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0)" th:onclick="showApproverFlow([[${task}]])"
-                                       data-toggle="modal" data-target="#modal-approval-flow"
+                                    <a href="javascript:void(0)" th:onclick="showTaskDetailFlow([[${task}]])"
+                                       data-toggle="modal" data-target="#modal-detail-flow"
                                        class="btn btn-primary btn-sm ">
-                                        <i class="fa fa-edit"></i> 审批
+                                        <i class="fa fa-edit"></i> 详情
                                     </a>
                                 </td>
                             </tr>
@@ -132,41 +132,52 @@
     </div>
 </div>
 
-<!-- 审批流程 -->
-<div id="modal-approval-flow" class="modal fade" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<!-- 审批详情  -->
+<div id="modal-detail-flow" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: auto; height: auto">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="exampleModalLabel">审批流程</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">表单</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">流转记录</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+                                    <input type="hidden" name="taskId" id="taskId">
+                                    <input type="hidden" name="approvd" id="approvdId" value="true">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="flow-holidayDays" class="control-label">请假天数:</label>
+                                            <input type="number" readonly name="holidayDays" class="form-control"
+                                                   id="flow-holidayDays">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="flow-reason" class="control-label">请假原因：</label>
+                                            <input type="text" readonly name="reason" class="form-control"
+                                                   id="flow-reason">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane ">
+                                <div class="panel-body">
+                                    <ul class="sortable-list connectList agile-list" id="taskTransfer">
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <form action="/flow/mytask/completeFlow" method="post" id="approvedForm">
-                <input type="hidden" name="taskId" id="taskId">
-                <input type="hidden" name="approvd" id="approvdId" value="true">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="flow-holidayDays" class="control-label">请假天数:</label>
-                        <input type="number" readonly name="holidayDays" class="form-control" id="flow-holidayDays">
-                    </div>
-                    <div class="form-group">
-                        <label for="flow-reason" class="control-label">请假原因：</label>
-                        <input type="text" readonly name="reason" class="form-control" id="flow-reason">
-                    </div>
-                    <div class="form-group">
-                        <label for="flow-comment" class="control-label">审核意见：</label>
-                        <input type="text" name="comment" class="form-control" id="flow-comment">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-success" onclick="submitForm(true)"><i class="fa fa-check"></i>&nbsp;审核通过
-                    </button>
-                    <button type="button" class="btn btn-warning" onclick="submitForm(false)"><i
-                            class="fa fa-times"></i>&nbsp;拒绝申请
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -220,10 +231,50 @@
     });
 
 
-    function showApproverFlow(task) {
-        $("#flow-holidayDays").val(task.variables.holidayDays.textValue);
-        $("#flow-reason").val(task.variables.reason.textValue);
-        $("#taskId").val(task.taskId);
+    function showTaskDetailFlow(task) {
+        console.log(task)
+        $("#flow-holidayDays").val(task.alreadyDoneVariables.holidayDays);
+        $("#flow-reason").val(task.alreadyDoneVariables.reason);
+        // 组装流转记录信息
+        $("#taskTransfer").empty();
+        task.transferRecords.forEach(function (data) {
+            var li = $("<li class=\"warning-element\"></li>");
+            var div1 = $("<div class=\"row\"></div>");
+            var div11 = $("<div class=\"col-sm-4\"></div>");
+            var div12 = $("<div class=\"col-sm-4\"></div>");
+            var div13 = $("<div class=\"col-sm-4\"></div>");
+            var div2 = $("<div class=\"row\"></div>");
+            var div21 = $("<div class=\"col-sm-12\"></div>");
+            div11.append("<label class=\"text-left\">操作人：" + data.assigneeName + "</label>");
+            if (data.finishTime == null) {
+                div12.append("<label class=\"text-center\">操作时间：</label>");
+            } else {
+                div12.append("<label class=\"text-center\">操作时间：" + data.finishTime + "</label>");
+            }
+            div13.append("<label class=\"text-right\">任务节点：" + data.taskName + "</label>");
+            div1.append(div11);
+            div1.append(div12);
+            div1.append(div13);
+            if (data.finishTime == null) {
+                div21.append("<a href=\"#\" class=\"pull-right btn btn-xs btn-primary\">审批中</a>");
+                div21.append("<i class=\"fa fa-clock-o\"></i> &nbsp;");
+            } else {
+                div21.append("<a href=\"#\" class=\"pull-right btn btn-xs btn-warning\">审批完成</a>");
+                if (data.taskName === "人事审批") {
+                    var state = "";
+                    if (task.alreadyDoneVariables.approvd) {
+                        state = "<label class=\"btn-primary\">通过</label>";
+                    } else {
+                        state = "<label class=\"btn-danger\">拒绝</label>";
+                    }
+                }
+                div21.append("<i class=\"fa fa-clock-o\"></i> 审批状态:" + state);
+                div21.append("<br/>")
+                div21.append("<i class=\"fa fa-clock-o\"></i> 审批意见:" + data.comment);
+            }
+            div2.append(div21);
+            li.append(div1).append(div2).appendTo("#taskTransfer");
+        });
     }
 
     function showImg(processInstanceId, flowName) {
