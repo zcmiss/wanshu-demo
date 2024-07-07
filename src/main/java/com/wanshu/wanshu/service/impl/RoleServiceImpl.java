@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,4 +117,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         // 批量保存角色和菜单的关系
         roleMenuService.saveBatch(list);
     }
+
+    @Override
+    public List<Role> findByRoleName(String filter) {
+        return lambdaQuery().like(StringUtils.isNotBlank(filter), Role::getRoleName, filter).list();
+    }
+
 }

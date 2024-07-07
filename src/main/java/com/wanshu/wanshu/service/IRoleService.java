@@ -27,4 +27,6 @@ public interface IRoleService extends IService<Role> {
     List<MenuShowVO> getMenuShow();
 
     void allocateMenu(RoleMenuVO vo);
+
+    List<Role> findByRoleName(String filter);
 }

@@ -32,4 +32,6 @@ public interface IUserService extends IService<User> {
     List<Integer> getRoleByUserId(Integer id);
 
     User queryByUserName(String userName);
+
+    List<User> queryByRoleId(String groupId);
 }

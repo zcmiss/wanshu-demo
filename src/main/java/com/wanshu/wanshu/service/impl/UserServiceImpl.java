@@ -16,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     IUserRoleService userRoleService;
+
 
     @Override
     public List<User> queryByUser(User user) {
@@ -134,5 +134,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .eq(Objects.nonNull(userName), User::getUserName, userName)
                 .list();
         return users.isEmpty() ? new User() : users.get(0);
+    }
+
+    /**
+     * 根据角色编号查询所有用户
+     *
+     * @param groupId
+     * @return {@link List }<{@link User }>
+     */
+    @Override
+    public List<User> queryByRoleId(String groupId) {
+        // 根据角色id 查询关系表
+        List<UserRole> userRoles = userRoleService
+                .lambdaQuery()
+                .eq(StringUtils.isNotBlank(groupId), UserRole::getRoleId, groupId)
+                .list();
+        return Optional.of(userRoles.stream()
+                        .map(UserRole::getUserId)
+                        .collect(Collectors.toList()))
+                .filter(ids -> !ids.isEmpty())
+                .map(ids -> lambdaQuery().in(User::getId, ids).list())
+                .orElseGet(ArrayList::new);
     }
 }

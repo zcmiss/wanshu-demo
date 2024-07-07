@@ -30,8 +30,6 @@ public class MySpringSecurityConfiguration extends WebSecurityConfigurerAdapter 
         http.authorizeRequests()
                 .antMatchers("/login.html","/css/**","/js/**","/img/**","/fonts/**","/docs/**")
                 .permitAll()
-                .antMatchers("/**")
-                .hasAnyRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 // 登录

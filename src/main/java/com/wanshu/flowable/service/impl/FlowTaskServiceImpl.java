@@ -168,7 +168,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         int pageSize = vo.getPageSize();
         // 查询已经完成的历史任务
         HistoricTaskInstanceQuery historicTaskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
-                .includeCaseVariables()
+                .includeProcessVariables()
                 .finished()
                 .taskAssignee(userName)
                 .orderByHistoricTaskInstanceStartTime()
