@@ -1,6 +1,10 @@
 package com.wanshu.flowable.modeler.configurations;
 
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -14,7 +18,8 @@ import org.springframework.core.io.ResourceLoader;
 import javax.sql.DataSource;
 
 @MapperScan(basePackages = {
-        "com.wanshu.wanshu.mapper"
+        "com.wanshu.wanshu.mapper",
+        "com.wanshu.flowable.mapper"
 },
         sqlSessionTemplateRef = "appSqlSessionTemplate",
         sqlSessionFactoryRef = "appSqlSessionFactory"
@@ -28,10 +33,14 @@ public class AppMybatisPlusConfiguration extends AbstractMybatisPlusConfiguratio
                                                    MybatisPlusProperties properties,
                                                    ResourceLoader resourceLoader,
                                                    ApplicationContext applicationContext) throws Exception {
+        // 显示添加分页拦截器
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+
         return getSqlSessionFactory(dataSource,
                 properties,
                 resourceLoader,
-                null,
+                new Interceptor[]{interceptor},
                 null,
                 applicationContext);
     }

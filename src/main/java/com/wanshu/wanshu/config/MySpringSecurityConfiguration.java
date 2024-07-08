@@ -28,7 +28,7 @@ public class MySpringSecurityConfiguration extends WebSecurityConfigurerAdapter 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login.html","/css/**","/js/**","/img/**","/fonts/**","/docs/**")
+                .antMatchers("/flowable-task/app-api/**","/login.html","/css/**","/js/**","/img/**","/fonts/**","/docs/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
