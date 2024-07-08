@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanshu.flowable.mapper.ActDeModelMapper">
+  <resultMap id="BaseResultMap" type="com.wanshu.flowable.domain.ActDeModel">
+    <!--@mbg.generated-->
+    <!--@Table act_de_model-->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="model_key" jdbcType="VARCHAR" property="modelKey" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="model_comment" jdbcType="VARCHAR" property="modelComment" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated" />
+    <result column="last_updated_by" jdbcType="VARCHAR" property="lastUpdatedBy" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="model_editor_json" jdbcType="LONGVARCHAR" property="modelEditorJson" />
+    <result column="thumbnail" jdbcType="BLOB" property="thumbnail" />
+    <result column="model_type" jdbcType="INTEGER" property="modelType" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, `name`, model_key, description, model_comment, created, created_by, last_updated, 
+    last_updated_by, version, model_editor_json, thumbnail, model_type, tenant_id
+  </sql>
+</mapper>
