@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 
@@ -29,6 +30,17 @@ public class FlowFornConteoller {
         PageUtils pageUtils1 = iFlowableFormService.queryList(pageUtils);
         model.addAttribute(SYS_PATH_URL, pageUtils);
         return "flow/form/formManager";
+    }
+
+    /**
+     * 完成表单的部署操作
+     * @param formId 表单Id
+     * @return
+     */
+    @GetMapping("/deployForm")
+    public String  deployForm(@RequestParam(value = "formId") String formId){
+        iFlowableFormService.deployForm(formId);
+        return "redirect:/flow/form/formList";
     }
 
 }

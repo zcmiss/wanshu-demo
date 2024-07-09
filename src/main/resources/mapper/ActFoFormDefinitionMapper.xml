@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanshu.flowable.mapper.ActFoFormDefinitionMapper">
+  <resultMap id="BaseResultMap" type="com.wanshu.flowable.domain.ActFoFormDefinition">
+    <!--@mbg.generated-->
+    <!--@Table act_fo_form_definition-->
+    <id column="ID_" jdbcType="VARCHAR" property="id" />
+    <result column="NAME_" jdbcType="VARCHAR" property="name" />
+    <result column="VERSION_" jdbcType="INTEGER" property="version" />
+    <result column="KEY_" jdbcType="VARCHAR" property="key" />
+    <result column="CATEGORY_" jdbcType="VARCHAR" property="category" />
+    <result column="DEPLOYMENT_ID_" jdbcType="VARCHAR" property="deploymentId" />
+    <result column="TENANT_ID_" jdbcType="VARCHAR" property="tenantId" />
+    <result column="RESOURCE_NAME_" jdbcType="VARCHAR" property="resourceName" />
+    <result column="DESCRIPTION_" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    ID_, NAME_, VERSION_, KEY_, CATEGORY_, DEPLOYMENT_ID_, TENANT_ID_, RESOURCE_NAME_, 
+    DESCRIPTION_
+  </sql>
+</mapper>

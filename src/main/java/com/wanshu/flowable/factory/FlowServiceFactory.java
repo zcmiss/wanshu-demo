@@ -65,7 +65,5 @@ public class FlowServiceFactory {
     @Resource
     protected FormRepositoryService formRepositoryService;
 
-    @Resource
-    protected ActDeModelService actDeModelService;
 
 }

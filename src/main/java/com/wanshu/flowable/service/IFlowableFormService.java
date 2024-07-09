@@ -9,4 +9,6 @@ public interface IFlowableFormService {
      * @return {@link PageUtils }
      */
     PageUtils queryList(PageUtils pageUtils);
+
+    void deployForm(String formId);
 }

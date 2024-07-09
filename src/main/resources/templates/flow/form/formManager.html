@@ -102,12 +102,12 @@
                                 <td>[[${flow.modelKey}]]</td>
                                 <td>[[${flow.description}]]</td>
                                 <td>[[${flow.version}]]</td>
-                                <td>[[${flow.createddatetime}]]</td>
+                                <td>[[${#dates.format(flow.createddatetime,'yyyy-MM-dd HH:mm:ss')}]]</td>
+                                <td>[[${flow.isDeploy ? '已部署':'未部署'}]]</td>
                                 <td>[[${flow.createdByName}]]</td>
                                 <td>
-                                    <a href="javascript:void(0)"
-                                       class="btn btn-danger btn-sm ">
-                                        <i class="fa fa-remove"></i> 删除
+                                    <a th:href="'/flow/form/deployForm?formId='+${flow.id}"
+                                       class="btn btn-primary btn-sm ">部署
                                     </a>
                                 </td>
                             </tr>

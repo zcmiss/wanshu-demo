@@ -33,12 +33,14 @@ public class FlowFrom {
     private Integer version;
     private String modelEditorJson;
     /**
+     * 是否已部署
+     */
+    private Boolean isDeploy;
+    /**
      * 0:流程图;2:表单；3：应用
      */
     private Integer modelType;
     private String tenantId;
-
-
 
 
 }
